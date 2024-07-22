@@ -48,7 +48,7 @@ jobs:
           builder: docker
           context: ./desktop-environments/${{ matrix.desktop-environment }}
           dockerfile: ./desktop-environments/${{ matrix.desktop-environment }}/Containerfile
-          image-name: ${{ env.IMAGE_REGISTRY}}/${{ env.IMAGE_NAME }}
+          image-name: ${{ env.IMAGE_NAME }}
           image-tags: |
             ${{ steps.generate-image-tags.outputs.tags }}
           build-args: |
