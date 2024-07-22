@@ -1,0 +1,66 @@
+name: Build Images
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+  schedule:
+    - cron: "0 */12 * * *"
+  workflow_dispatch:
+
+env:
+  IMAGE_REGISTRY: ghcr.io/${{ github.repository_owner }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        fedora-version: [40]
+        desktop-environment: [cosmic]
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+    env:
+      IMAGE_NAME: eternal-linux/base/${{ matrix.desktop-environment }}
+      FEDORA_VERSION: ${{ matrix.fedora-version }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Generate Image Tags
+        uses: rsturla/eternal-main/.github/actions/generate-image-tags@main
+        id: generate-image-tags
+        with:
+          image-name: ${{ env.IMAGE_REGISTRY}}/${{ env.IMAGE_NAME }}
+          major-version: ${{ env.FEDORA_VERSION }}
+          is-release: ${{ github.event_name != 'pull_request' }}
+
+      - name: Build Image
+        id: build
+        uses: rsturla/eternal-main/.github/actions/build-image@main
+        with:
+          builder: docker
+          context: ./desktop-environments/${{ matrix.desktop-environment }}
+          dockerfile: ./desktop-environments/${{ matrix.desktop-environment }}/Containerfile
+          image-name: ${{ env.IMAGE_NAME }}
+          image-tags: |
+            ${{ steps.generate-image-tags.outputs.tags }}
+          build-args: |
+            FEDORA_VERSION=${{ env.FEDORA_VERSION }}
+
+      - name: Push Image
+        id: push
+        uses: rsturla/eternal-main/.github/actions/push-image@main
+        with:
+          builder: ${{ steps.build.outputs.builder }}
+          image-name: ${{ steps.build.outputs.image }}
+          image-tags: ${{ steps.build.outputs.tags }}
+          image-registry: ${{ env.IMAGE_REGISTRY }}
+          registry-username: ${{ github.actor }}
+          registry-password: ${{ secrets.GITHUB_TOKEN }}

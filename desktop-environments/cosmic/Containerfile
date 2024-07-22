@@ -1,0 +1,20 @@
+ARG FEDORA_VERSION=40
+ARG FEDORA_EDITION=base
+ARG FEDORA_IMAGE=quay.io/fedora-ostree-desktops/${FEDORA_EDITION}:${FEDORA_VERSION}
+
+FROM ${FEDORA_IMAGE}
+
+COPY files/ /
+
+RUN rpm-ostree install \
+  cosmic-desktop \
+  gnome-keyring
+
+RUN rm -f /etc/systemd/system/display-manager.service && \
+  ln -s /usr/lib/systemd/system/cosmic-greeter.service /etc/systemd/system/display-manager.service \
+  && \
+  systemctl enable greetd-workaround.service \
+  && \
+  rpm-ostree cleanup -m && \
+  rm -rf /tmp/* /var/* && \
+  ostree container commit
