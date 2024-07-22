@@ -34,14 +34,14 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Generate Image Tags
-        uses: rsturla/eternal-main/.github/actions/generate-image-tags
+        uses: rsturla/eternal-main/.github/actions/generate-image-tags@main
         with:
           image-name: ${{ env.IMAGE_REGISTRY}}/${{ env.IMAGE_NAME }}
           major-version: ${{ env.FEDORA_VERSION }}
           is-release: ${{ github.event_name != 'pull_request' }}
 
       - name: Build Image
-        uses: rsturla/eternal-main/.github/actions/build-image
+        uses: rsturla/eternal-main/.github/actions/build-image@main
         with:
           builder: docker
           context: ./desktop-environments/${{ matrix.desktop-environment }}
@@ -52,7 +52,7 @@ jobs:
             FEDORA_VERSION=${{ env.FEDORA_VERSION }}
 
       - name: Push Image
-        uses: rsturla/eternal-main/.github/actions/push-image
+        uses: rsturla/eternal-main/.github/actions/push-image@main
         with:
           builder: ${{ steps.build-image.outputs.builder }}
           image-name: ${{ steps.build.outputs.image }}
