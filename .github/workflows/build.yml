@@ -58,7 +58,7 @@ jobs:
         id: push
         uses: rsturla/eternal-main/.github/actions/push-image@main
         with:
-          builder: ${{ steps.build-image.outputs.builder }}
+          builder: ${{ steps.build.outputs.builder }}
           image-name: ${{ steps.build.outputs.image }}
           image-tags: ${{ steps.build.outputs.tags }}
           image-registry: ${{ env.IMAGE_REGISTRY }}
