@@ -49,7 +49,7 @@ jobs:
           context: ./desktop-environments/${{ matrix.desktop-environment }}
           dockerfile: ./desktop-environments/${{ matrix.desktop-environment }}/Containerfile
           image-name: ${{ env.IMAGE_REGISTRY}}/${{ env.IMAGE_NAME }}
-          image-tag: |
+          image-tags: |
             ${{ steps.generate-image-tags.outputs.tags }}
           build-args: |
             FEDORA_VERSION=${{ env.FEDORA_VERSION }}
