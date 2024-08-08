@@ -10,7 +10,7 @@ RUN rpm-ostree install \
   cosmic-desktop \
   gnome-keyring \
   && \
-  rm /etc/yum.repos.d/ryanbx-cosmic-epoch.repo \
+  rm /etc/yum.repos.d/ryanabx-cosmic-epoch.repo \
   && \
   rpm-ostree cleanup -m && \
   rm -rf /tmp/* /var/* && \
