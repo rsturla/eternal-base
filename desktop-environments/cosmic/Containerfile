@@ -9,6 +9,8 @@ COPY files/ /
 RUN rpm-ostree install \
   cosmic-desktop \
   gnome-keyring \
+  power-profiles-daemon \
+  NetworkManager-openvpn \
   && \
   rm /etc/yum.repos.d/ryanabx-cosmic-epoch.repo \
   && \
