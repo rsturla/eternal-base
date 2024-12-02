@@ -27,7 +27,7 @@ jobs:
       packages: write
       id-token: write
     env:
-      IMAGE_NAME: eternal-linux/base/${{ matrix.desktop-environment }}
+      IMAGE_NAME: eternal-linux/base/fedora-${{ matrix.desktop-environment }}
       FEDORA_VERSION: ${{ matrix.fedora-version }}
     steps:
       - name: Checkout
