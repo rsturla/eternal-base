@@ -20,7 +20,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        fedora-version: [40, 41]
+        fedora-version: [41]
         desktop-environment: [cosmic]
     permissions:
       contents: read
@@ -40,6 +40,9 @@ jobs:
           image-name: ${{ env.IMAGE_REGISTRY}}/${{ env.IMAGE_NAME }}
           major-version: ${{ env.FEDORA_VERSION }}
           is-release: ${{ github.event_name != 'pull_request' }}
+
+      - name: Login to GHCR
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
       - name: Build Image
         id: build
@@ -62,5 +65,3 @@ jobs:
           image-name: ${{ steps.build.outputs.image }}
           image-tags: ${{ steps.build.outputs.tags }}
           image-registry: ${{ env.IMAGE_REGISTRY }}
-          registry-username: ${{ github.actor }}
-          registry-password: ${{ secrets.GITHUB_TOKEN }}
