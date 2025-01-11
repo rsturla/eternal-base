@@ -41,6 +41,9 @@ jobs:
           major-version: ${{ env.FEDORA_VERSION }}
           is-release: ${{ github.event_name != 'pull_request' }}
 
+      - name: Login to GHCR
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
       - name: Build Image
         id: build
         uses: rsturla/eternal-main/.github/actions/build-image@main
@@ -62,5 +65,3 @@ jobs:
           image-name: ${{ steps.build.outputs.image }}
           image-tags: ${{ steps.build.outputs.tags }}
           image-registry: ${{ env.IMAGE_REGISTRY }}
-          registry-username: ${{ github.actor }}
-          registry-password: ${{ secrets.GITHUB_TOKEN }}
